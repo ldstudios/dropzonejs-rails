@@ -287,7 +287,9 @@
           this.element.classList.add("dz-started");
         }
         if (this.previewsContainer) {
-          file.previewElement = Dropzone.createElement(this.options.previewTemplate.trim());
+          //FINDME
+          //FORTRESS RISK SPECIFIC MONKEY PATCH TO SUPPORT INSERTING A <TR> TAG INTO A TABLE
+          file.previewElement = Dropzone.createElement(this.options.previewTemplate.trim(), "table");
           file.previewTemplate = file.previewElement;
           this.previewsContainer.appendChild(file.previewElement);
           ref = file.previewElement.querySelectorAll("[data-dz-name]");
@@ -1657,11 +1659,21 @@
     });
   };
 
-  Dropzone.createElement = function(string) {
-    var div;
-    div = document.createElement("div");
-    div.innerHTML = string;
-    return div.childNodes[0];
+  Dropzone.createElement = function (string, wrapper_element = "div") {
+    //FINDME
+    //FORTRESS RISK SPECIFIC MONKEY PATCH TO SUPPORT INSERTING A <TR> TAG INTO A TABLE
+    if (wrapper_element === "table") {
+      var tble;
+      tble = document.createElement(wrapper_element);
+      tble.innerHTML = string; //contains a <tr> tag
+      //Two ChildNodes calls b/c 
+      return tble.childNodes[0].childNodes[0];
+    } else {
+      var div;
+      div = document.createElement(wrapper_element);
+      div.innerHTML = string;
+      return div.childNodes[0];
+    }
   };
 
   Dropzone.elementInside = function(element, container) {
